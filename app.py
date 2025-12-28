@@ -460,3 +460,4 @@ elif page == "Predict Fraud":
 # Footer
 st.sidebar.markdown("---")
 st.sidebar.info
+
