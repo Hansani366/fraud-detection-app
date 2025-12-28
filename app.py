@@ -457,7 +457,18 @@ elif page == "Predict Fraud":
                             mime="text/csv"
                         )
 
-# Footer
 st.sidebar.markdown("---")
-st.sidebar.info
+st.sidebar.info("""
+**Developed for Educational Purposes**
+
+This application demonstrates ML-based credit card fraud detection using Python and Streamlit.
+
+**Technologies Used:**
+- Streamlit
+- Scikit-learn
+- Pandas, NumPy
+- Matplotlib, Seaborn
+- Imbalanced-learn
+""")
+
 
