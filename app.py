@@ -36,7 +36,7 @@ st.markdown("""
 }
 
 section[data-testid="stSidebar"] {
-    background-color: #0B2F24;
+    background-color: #a0cbb4;
 }
 
 .metric-card {
@@ -278,4 +278,5 @@ FraudGuard AI – ML-based FinTech Dashboard
 
 Technologies: Streamlit, Scikit-learn, Pandas, NumPy
 """)
+
 
