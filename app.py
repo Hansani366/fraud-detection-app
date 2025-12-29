@@ -30,77 +30,44 @@ st.set_page_config(
 # -------------------------------------------------
 st.markdown("""
 <style>
-
-/* App background */
 .stApp {
-    background: linear-gradient(135deg, #0E2F24 0%, #1B4D3E 60%, #2E6B57 100%);
-    color: #F5F5F2;
-    font-family: 'Inter', sans-serif;
+    background: linear-gradient(120deg, #0F3D2E 0%, #1E7F5C 100%);
+    color: white;
 }
 
-/* Sidebar */
 section[data-testid="stSidebar"] {
-    background-color: #0B241C;
-    padding-top: 2rem;
+    background-color: #0B2F24;
 }
 
-/* Headings – Editorial feel */
-h1, h2 {
-    font-family: 'Playfair Display', serif;
-    letter-spacing: -0.5px;
-}
-h3 {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-}
-
-/* Hero text spacing */
-.block-container {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-}
-
-/* Metric cards – clean, premium */
 .metric-card {
-    background-color: #F7F7F4;
-    color: #1C2E26;
-    padding: 28px;
-    border-radius: 20px;
-    box-shadow: none;
-    border: 1px solid rgba(0,0,0,0.05);
+    background: white;
+    color: #102A23;
+    padding: 22px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     text-align: center;
 }
 
-/* Buttons – Ellevest style */
 .stButton>button {
-    background-color: #E6EEDC;
-    color: #1B3A2E;
-    border-radius: 999px;
+    background-color: #1E7F5C;
+    color: white;
+    border-radius: 12px;
     font-weight: 600;
-    padding: 0.7rem 2rem;
+    padding: 0.6rem 1.2rem;
     border: none;
 }
 .stButton>button:hover {
-    background-color: #D8E4CB;
+    background-color: #145C43;
 }
 
-/* Inputs */
-input {
-    border-radius: 999px !important;
-    padding: 0.6rem 1rem !important;
-}
-
-/* Dataframes */
 .stDataFrame {
-    background-color: #FFFFFF;
-    border-radius: 16px;
-    border: none;
+    background-color: white;
+    border-radius: 12px;
 }
 
-/* Remove default Streamlit clutter */
-footer {visibility: hidden;}
-header {visibility: hidden;}
-
+h1, h2, h3 {
+    font-family: 'Segoe UI', sans-serif;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -125,17 +92,13 @@ page = st.sidebar.radio(
 # Hero Section
 # -------------------------------------------------
 st.markdown("""
-<div style="max-width:650px;padding:80px 0;">
-    <h1 style="font-size:52px;line-height:1.1;">
-        Your financial security<br>is personal
-    </h1>
-    <p style="font-size:18px;opacity:0.9;margin-top:16px;">
-        FraudGuard AI delivers intelligent, personalized protection
-        for modern financial transactions.
+<div style="padding:60px 0;text-align:center;">
+    <h1 style="font-size:48px;">Your Financial Security, Powered by AI</h1>
+    <p style="font-size:18px;opacity:0.9;">
+        Detect fraudulent credit card transactions with intelligent Machine Learning models.
     </p>
 </div>
 """, unsafe_allow_html=True)
-
 
 # -------------------------------------------------
 # Load Data
@@ -279,27 +242,29 @@ elif page == "🤖 Model Training":
 # -------------------------------------------------
 # Prediction Page
 # -------------------------------------------------
-if pred == 1:
-    st.markdown(
-        f"""
-        <div class="metric-card" style="border-left:6px solid #9F2D2D;">
-            <h3>Potential Fraud Identified</h3>
-            <p>Confidence level: {prob*100:.2f}%</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-else:
-    st.markdown(
-        f"""
-        <div class="metric-card" style="border-left:6px solid #2F7D64;">
-            <h3>Transaction Appears Safe</h3>
-            <p>Confidence level: {prob*100:.2f}%</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+elif page == "🔮 Predict Fraud":
 
+    if "model" not in st.session_state:
+        st.warning("Train a model first.")
+    else:
+        model = st.session_state["model"]
+        scaler = st.session_state["scaler"]
+        features = st.session_state["features"]
+
+        st.subheader("Manual Transaction Prediction")
+
+        inputs = {f: st.number_input(f, 0.0) for f in features}
+
+        if st.button("Predict Transaction"):
+            df_input = pd.DataFrame([inputs])
+            scaled = scaler.transform(df_input)
+            pred = model.predict(scaled)[0]
+            prob = model.predict_proba(scaled)[0][1]
+
+            if pred == 1:
+                st.error(f"🚨 Fraud Detected ({prob*100:.2f}%)")
+            else:
+                st.success(f"✅ Normal Transaction ({prob*100:.2f}%)")
 
 # -------------------------------------------------
 # Footer
